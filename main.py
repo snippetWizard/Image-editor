@@ -19,6 +19,19 @@ def add_image():
     canvas.image = image
     canvas.create_image(0, 0, image=image, anchor="nw")
 
+def draw(mouseEvent):
+    x1, y1 = (mouseEvent.x - pen_size), (mouseEvent.y - pen_size)
+    x2, y2 = (mouseEvent.x - pen_size), (mouseEvent.y - pen_size)
+    canvas.create_oval(x1, y1, x2, y2, fill=pen_color, outline='')
+
+def change_color():
+    global pen_color
+    pen_color = colorchooser.askcolor(title="Select Pen Color")[1]
+
+def change_size(size):
+    global pen_size
+    pen_size = size
+
 
 root = tk.Tk()
 
@@ -39,11 +52,35 @@ root.config(bg="white")
 left_frame = tk.Frame(root, width=200, height=600, bg="white")
 left_frame.pack(side="left", fill="y")
 
+
 canvas = tk.Canvas(root, width=750, height=600)
 canvas.pack()
 
 image_button = tk.Button(left_frame, text="Add Image", bg="white", command=add_image)
 image_button.pack(pady=15)
 
+color_button = tk.Button(
+    left_frame, text="Change Pen Color", command=change_color, bg="white"
+)
+color_button.pack(pady=5)
+
+pen_size_frame = tk.Frame(left_frame, bg="white")
+pen_size_frame.pack(pady=5)
+pen_size_1 = tk.Radiobutton(
+    pen_size_frame, text="Small", value=5, bg="white", command= lambda: change_size(5)
+)
+pen_size_1.pack(side="left")
+
+pen_size_2 = tk.Radiobutton(
+    pen_size_frame, text="Medium", value=10, bg="white", command= lambda: change_size(10)
+)
+pen_size_2.pack(side="left")
+
+pen_size_3 = tk.Radiobutton(
+    pen_size_frame, text="Large", value=15, bg="white", command= lambda: change_size(15)
+)
+pen_size_3.pack(side="left")
+
+canvas.bind("<B1-Motion>", draw)
 
 root.mainloop()
